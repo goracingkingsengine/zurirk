@@ -37,6 +37,7 @@ func init() {
 func main() {
 	fmt.Printf("zurichess %v https://bitbucket.org/zurichess/zurichess\n", buildVersion)
 	fmt.Printf("build with %v at %v, running on %v\n", runtime.Version(), buildTime, runtime.GOARCH)
+	fmt.Printf("possible basis for zurirk racing kings engine\n")
 
 	flag.Parse()
 	if *version {
