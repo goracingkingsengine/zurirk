@@ -143,8 +143,14 @@ func (uci *UCI) Execute(line string) error {
 	///////////////////////////////////////////////////
 	// NEW
 	// test commands
-	if(TEST) {
+	if(engine.IsTest()) {
 		switch cmd {
+		case "uu":
+			engine.SetUseUnicodeSymbols(true)
+			return nil
+		case "uc":
+			engine.SetUseUnicodeSymbols(false)
+			return nil
 		case "p":
 			uci.PrintBoard(line)
 			return nil

@@ -199,6 +199,14 @@ func NewEngine(pos *Position, log Logger, options Options) *Engine {
 
 ///////////////////////////////////////////////////
 // NEW
+func IsTest() bool {
+	return TEST
+}
+
+func SetUseUnicodeSymbols(useUnicode bool) {
+	USE_UNICODE_SYMBOLS=useUnicode
+}
+
 func (eng *Engine) PrintBoard() {
 	if eng.Position != nil {
 		eng.Position.PrintBoard()

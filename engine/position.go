@@ -71,9 +71,9 @@ func (pos *Position) PrintBoard() {
 			fmt.Printf("☐")
 		} else {
 			if uint64(pos.ByColor[Black]) & mask != 0 {
-				fmt.Printf("%c",pieceToSymbolU[2*j])
+				fmt.Print(pieceToSymbolStr(Piece(2*j)))
 			} else {
-				fmt.Printf("%c",pieceToSymbolU[2*j+1])
+				fmt.Print(pieceToSymbolStr(Piece(2*j+1)))
 			}
 		}
 		if (i%8) == 7 {

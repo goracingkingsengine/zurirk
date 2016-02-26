@@ -57,7 +57,7 @@ func main() {
 	log.SetFlags(log.Lshortfile)
 
 	uci := NewUCI()
-	uci.PrintBoard("")
+	
 	scan := bufio.NewScanner(os.Stdin)
 	for scan.Scan() {
 		line := scan.Text()

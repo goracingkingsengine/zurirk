@@ -17,7 +17,10 @@ var (
 	itoa               = "0123456789" // shortcut for Itoa
 	colorToSymbol      = "?bw"
 	pieceToSymbol      = ".?pPnNbBrRqQkK"
+	///////////////////////////////////////////////////
+	// NEW
 	pieceToSymbolU     = []rune(".?♙♟♘♞♗♝♖♜♕♛♔♚")
+	///////////////////////////////////////////////////
 	symbolToCastleInfo = map[rune]castleInfo{
 		'K': castleInfo{
 			Castle: WhiteOO,
@@ -60,6 +63,16 @@ var (
 		'K': WhiteKing,
 	}
 )
+
+///////////////////////////////////////////////////
+// NEW
+func pieceToSymbolStr(piece Piece) string {
+	if USE_UNICODE_SYMBOLS {
+		return fmt.Sprintf("%c",pieceToSymbolU[piece])
+	}
+	return fmt.Sprintf("%c",pieceToSymbol[piece])
+}
+///////////////////////////////////////////////////
 
 // PositionFromFEN parses fen and returns the position.
 //
