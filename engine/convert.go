@@ -17,6 +17,7 @@ var (
 	itoa               = "0123456789" // shortcut for Itoa
 	colorToSymbol      = "?bw"
 	pieceToSymbol      = ".?pPnNbBrRqQkK"
+	pieceToSymbolU     = []rune(".?♙♟♘♞♗♝♖♜♕♛♔♚")
 	symbolToCastleInfo = map[rune]castleInfo{
 		'K': castleInfo{
 			Castle: WhiteOO,

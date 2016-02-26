@@ -146,7 +146,7 @@ func (uci *UCI) Execute(line string) error {
 	if(TEST) {
 		switch cmd {
 		case "p":
-			uci.printboard(line)
+			uci.PrintBoard(line)
 			return nil
 		case "x":
 			return errQuit
@@ -172,7 +172,7 @@ func (uci *UCI) Execute(line string) error {
 
 ///////////////////////////////////////////////////
 // NEW
-func (uci *UCI) printboard(line string) error {
+func (uci *UCI) PrintBoard(line string) error {
 	// Print the board.
 	uci.Engine.PrintBoard()
 	return nil

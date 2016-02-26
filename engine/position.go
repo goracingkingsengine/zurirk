@@ -68,12 +68,12 @@ func (pos *Position) PrintBoard() {
 			}
 		}
 		if(!found){
-			fmt.Printf(".")
+			fmt.Printf("☐")
 		} else {
 			if uint64(pos.ByColor[Black]) & mask != 0 {
-				fmt.Printf("%c",pieceToSymbol[2*j])
+				fmt.Printf("%c",pieceToSymbolU[2*j])
 			} else {
-				fmt.Printf("%c",pieceToSymbol[2*j+1])
+				fmt.Printf("%c",pieceToSymbolU[2*j+1])
 			}
 		}
 		if (i%8) == 7 {
