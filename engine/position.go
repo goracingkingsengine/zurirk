@@ -54,6 +54,36 @@ type Position struct {
 	curr            *state  // current state
 }
 
+///////////////////////////////////////////////////
+// NEW
+func (pos *Position) PrintBoard() {
+	var mask uint64=1 << uint(SquareArraySize-1)
+	for i:=0; i<SquareArraySize; i++ {
+		found:=false
+		var j=0
+		for ; j<FigureArraySize; j++ {
+			if uint64(pos.ByFigure[j]) & mask != 0 {
+				found=true
+				break
+			}
+		}
+		if(!found){
+			fmt.Printf(".")
+		} else {
+			if uint64(pos.ByColor[Black]) & mask != 0 {
+				fmt.Printf("%c",pieceToSymbol[2*j])
+			} else {
+				fmt.Printf("%c",pieceToSymbol[2*j+1])
+			}
+		}
+		if (i%8) == 7 {
+			fmt.Printf("\n")
+		}
+		mask=mask >> 1
+	}
+}
+///////////////////////////////////////////////////
+
 // NewPosition returns a new position.
 func NewPosition() *Position {
 	pos := &Position{

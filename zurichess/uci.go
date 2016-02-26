@@ -140,6 +140,21 @@ func (uci *UCI) Execute(line string) error {
 	uci.ready <- struct{}{}
 	<-uci.ready
 
+	///////////////////////////////////////////////////
+	// NEW
+	// test commands
+	if(TEST) {
+		switch cmd {
+		case "p":
+			uci.printboard(line)
+			return nil
+		case "x":
+			return errQuit
+		}
+	}
+	// END NEW
+	///////////////////////////////////////////////////
+
 	// These commands expect engine to be ready.
 	switch cmd {
 	case "ucinewgame":
@@ -154,6 +169,15 @@ func (uci *UCI) Execute(line string) error {
 		return fmt.Errorf("unhandled command %s", cmd)
 	}
 }
+
+///////////////////////////////////////////////////
+// NEW
+func (uci *UCI) printboard(line string) error {
+	// Print the board.
+	uci.Engine.PrintBoard()
+	return nil
+}
+///////////////////////////////////////////////////
 
 func (uci *UCI) uci(line string) error {
 	fmt.Printf("id name zurichess %v\n", buildVersion)

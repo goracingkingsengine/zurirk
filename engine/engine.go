@@ -41,6 +41,10 @@
 //
 package engine
 
+import(
+	"fmt"
+)
+
 const (
 	CheckDepthExtension    int32 = 1 // how much to extend search in case of checks
 	NullMoveDepthLimit     int32 = 1 // disable null-move below this limit
@@ -192,6 +196,17 @@ func NewEngine(pos *Position, log Logger, options Options) *Engine {
 	eng.SetPosition(pos)
 	return eng
 }
+
+///////////////////////////////////////////////////
+// NEW
+func (eng *Engine) PrintBoard() {
+	if eng.Position != nil {
+		eng.Position.PrintBoard()
+	} else {
+		fmt.Printf("position missing\n")
+	}
+}
+///////////////////////////////////////////////////
 
 // SetPosition sets current position.
 // If pos is nil, the starting position is set.
