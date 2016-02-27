@@ -45,6 +45,16 @@ import(
 	"fmt"
 )
 
+///////////////////////////////////////////////////
+// NEW
+const (
+	VARIANT_Standard         = iota
+	VARIANT_Racing_Kings
+	)
+
+const VARIANT_CURRENT        = -1
+///////////////////////////////////////////////////
+
 const (
 	CheckDepthExtension    int32 = 1 // how much to extend search in case of checks
 	NullMoveDepthLimit     int32 = 1 // disable null-move below this limit
@@ -205,6 +215,15 @@ func IsTest() bool {
 
 func SetUseUnicodeSymbols(useUnicode bool) {
 	USE_UNICODE_SYMBOLS=useUnicode
+}
+
+func (eng *Engine) SetVariant(setVariant int) {
+	if(setVariant<0) {
+		setVariant=Variant
+	}
+	Variant=setVariant
+	pos, _ := PositionFromFEN(START_FENS[Variant])
+	eng.SetPosition(pos)
 }
 
 func (eng *Engine) PrintBoard() {

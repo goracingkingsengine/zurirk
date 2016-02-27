@@ -151,6 +151,12 @@ func (uci *UCI) Execute(line string) error {
 		case "uc":
 			engine.SetUseUnicodeSymbols(false)
 			return nil
+		case "s":
+			uci.Engine.SetVariant(engine.VARIANT_Standard)
+			return nil
+		case "r":
+			uci.Engine.SetVariant(engine.VARIANT_Racing_Kings)
+			return nil
 		case "p":
 			uci.PrintBoard(line)
 			return nil
@@ -181,6 +187,11 @@ func (uci *UCI) Execute(line string) error {
 func (uci *UCI) PrintBoard(line string) error {
 	// Print the board.
 	uci.Engine.PrintBoard()
+	return nil
+}
+
+func (uci *UCI) SetVariant(setVariant int) error {
+	uci.Engine.SetVariant(setVariant)
 	return nil
 }
 ///////////////////////////////////////////////////

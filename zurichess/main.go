@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"runtime"
 	"runtime/pprof"
+
+	"bitbucket.org/zurichess/zurichess/engine"
 )
 
 var (
@@ -57,6 +59,8 @@ func main() {
 	log.SetFlags(log.Lshortfile)
 
 	uci := NewUCI()
+
+	uci.SetVariant(engine.VARIANT_CURRENT)
 	
 	scan := bufio.NewScanner(os.Stdin)
 	for scan.Scan() {

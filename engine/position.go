@@ -58,6 +58,7 @@ type Position struct {
 // NEW
 func (pos *Position) PrintBoard() {
 	var mask uint64=1 << uint(SquareArraySize-1)
+	buff:=""
 	for i:=0; i<SquareArraySize; i++ {
 		found:=false
 		var j=0
@@ -71,13 +72,14 @@ func (pos *Position) PrintBoard() {
 			fmt.Printf("☐")
 		} else {
 			if uint64(pos.ByColor[Black]) & mask != 0 {
-				fmt.Print(pieceToSymbolStr(Piece(2*j)))
+				buff=pieceToSymbolStr(Piece(2*j))+buff
 			} else {
-				fmt.Print(pieceToSymbolStr(Piece(2*j+1)))
+				buff=pieceToSymbolStr(Piece(2*j+1))+buff
 			}
 		}
 		if (i%8) == 7 {
-			fmt.Printf("\n")
+			fmt.Printf("%s\n",buff)
+			buff=""
 		}
 		mask=mask >> 1
 	}
