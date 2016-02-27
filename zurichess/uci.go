@@ -152,13 +152,21 @@ func (uci *UCI) Execute(line string) error {
 			engine.SetUseUnicodeSymbols(false)
 			return nil
 		case "s":
-			uci.Engine.SetVariant(engine.VARIANT_Standard)
+			uci.SetVariant(engine.VARIANT_Standard)
+			uci.PrintBoard()
 			return nil
 		case "r":
-			uci.Engine.SetVariant(engine.VARIANT_Racing_Kings)
+			uci.SetVariant(engine.VARIANT_Racing_Kings)
+			uci.PrintBoard()
 			return nil
 		case "p":
-			uci.PrintBoard(line)
+			uci.PrintBoard()
+			return nil
+		case "m":
+			uci.MakeSanMove(line)
+			return nil
+		case "d":
+			uci.UndoMove(line)
 			return nil
 		case "x":
 			return errQuit
@@ -184,9 +192,40 @@ func (uci *UCI) Execute(line string) error {
 
 ///////////////////////////////////////////////////
 // NEW
-func (uci *UCI) PrintBoard(line string) error {
+var reMakeSanMove = regexp.MustCompile(`^m\s+([^\s]+)$`)
+
+func (uci *UCI) PrintBoard() error {
 	// Print the board.
 	uci.Engine.PrintBoard()
+	return nil
+}
+
+func (uci *UCI) MakeSanMove(line string) error {
+	option := reMakeSanMove.FindStringSubmatch(line)
+	if option == nil {
+		res:=fmt.Errorf("invalid make san move arguments")
+		fmt.Println(res)
+		return res
+	}
+	move, err := uci.Engine.Position.SANToMove(option[1])
+	if err != nil {
+		res:=fmt.Errorf("invalid move")
+		fmt.Println(res)
+		return res
+	}
+	uci.Engine.DoMove(move)
+	uci.PrintBoard()
+	return nil
+}
+
+func (uci *UCI) UndoMove(line string) error {
+	if uci.Engine.Position.GetNoStates()<2 {
+		res:=fmt.Errorf("no move to delete")
+		fmt.Println(res)
+		return res
+	}
+	uci.Engine.UndoMove()
+	uci.PrintBoard()
 	return nil
 }
 
@@ -232,19 +271,19 @@ func (uci *UCI) position(line string) error {
 	var err error
 	switch args[i] {
 	case "startpos":
-		pos, err = engine.PositionFromFEN(engine.FENStartPos)
+		uci.SetVariant(engine.VARIANT_CURRENT)
 		i++
 	case "fen":
 		pos, err = engine.PositionFromFEN(strings.Join(args[1:7], " "))
+		if err != nil {
+			return err
+		}
+		uci.Engine.SetPosition(pos)
 		i += 7
 	default:
 		err = fmt.Errorf("unknown position command: %s", args[0])
-	}
-	if err != nil {
 		return err
 	}
-
-	uci.Engine.SetPosition(pos)
 
 	if i < len(args) {
 		if args[i] != "moves" {

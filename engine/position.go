@@ -57,6 +57,10 @@ type Position struct {
 ///////////////////////////////////////////////////
 // NEW
 func (pos *Position) PrintBoard() {
+	/*fmt.Printf("  0123456701234567012345670123456701234567012345670123456701234567\n")
+	for j:=0 ; j<FigureArraySize; j++ {
+		fmt.Printf("%d %064b\n",j,pos.ByFigure[j])
+	}*/
 	var mask uint64=1 << uint(SquareArraySize-1)
 	buff:=""
 	for i:=0; i<SquareArraySize; i++ {
@@ -69,7 +73,7 @@ func (pos *Position) PrintBoard() {
 			}
 		}
 		if(!found){
-			fmt.Printf("☐")
+			buff="☐"+buff
 		} else {
 			if uint64(pos.ByColor[Black]) & mask != 0 {
 				buff=pieceToSymbolStr(Piece(2*j))+buff
@@ -112,6 +116,13 @@ func (pos *Position) String() string {
 func (pos *Position) prev() *state {
 	return &pos.states[len(pos.states)-1]
 }
+
+///////////////////////////////////////////////////
+// NEW
+func (pos *Position) GetNoStates() int {
+	return len(pos.states)
+}
+///////////////////////////////////////////////////
 
 // popState pops one ply.
 func (pos *Position) popState() {
