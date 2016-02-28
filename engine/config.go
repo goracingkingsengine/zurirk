@@ -21,6 +21,8 @@ var RK_PIECE_VALUES = []int32{
 	700,
 }
 
+var KING_ADVANCE_VALUE int32 = 200
+
 var USE_UNICODE_SYMBOLS      = true
 
 const GET_FIRST              = true

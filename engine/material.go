@@ -285,7 +285,7 @@ func EvaluateSideRk(pos *Position, side Color) int32 {
 		num := pos.ByPiece(side, piece).Count()
 		val += num * RK_PIECE_VALUES[piece]
 	}
-	val += int32(pos.ByPiece(side, King).AsSquare().Rank())*150
+	val += int32(pos.ByPiece(side, King).AsSquare().Rank())*KING_ADVANCE_VALUE
 	return val
 }
 ///////////////////////////////////////////////////
