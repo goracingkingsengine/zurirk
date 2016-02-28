@@ -168,6 +168,9 @@ func (uci *UCI) Execute(line string) error {
 		case "d":
 			uci.UndoMove(line)
 			return nil
+		case "l":
+			uci.Engine.Position.PrintLegalMoves()
+			return nil
 		case "x":
 			return errQuit
 		}

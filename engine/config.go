@@ -13,4 +13,7 @@ var START_FENS = [...]string{
 	}
 
 var USE_UNICODE_SYMBOLS      = true
+
+const GET_FIRST              = true
+const GET_ALL                = false
 ///////////////////////////////////////////////////

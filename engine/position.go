@@ -446,9 +446,11 @@ func (pos *Position) PawnThreats(side Color) Bitboard {
 	return West(pawns) | East(pawns)
 }
 
+///////////////////////////////////////////////////
+// OLD
 // HasLegalMoves returns true if current side has any legal moves.
 // This function is very expensive.
-func (pos *Position) HasLegalMoves() bool {
+/*func (pos *Position) HasLegalMoves() bool {
 	var moves []Move
 	pos.GenerateMoves(All, &moves)
 	us := pos.SideToMove
@@ -464,7 +466,60 @@ func (pos *Position) HasLegalMoves() bool {
 	}
 
 	return false
+}*/
+///////////////////////////////////////////////////
+
+///////////////////////////////////////////////////
+// NEW
+// HasLegalMoves returns true if current side has any legal moves.
+// This function is very expensive.
+// ! Now we use GetLegalMoves for this.
+func (pos *Position) HasLegalMoves() bool {
+	numMoves := len(pos.GetLegalMoves(GET_FIRST))
+	return numMoves > 0
 }
+
+// generate all legal moves
+func (pos *Position) GetLegalMoves(getfirst bool) []Move {
+	var moves []Move
+	var legalMoves=[]Move{}
+	pos.GenerateMoves(All, &moves)
+	us := pos.SideToMove
+	them := us.Opposite()
+
+	for _, m := range moves {
+		pos.DoMove(m)
+		checked := pos.IsChecked(us)
+		// in Racing Kings any move that gives check is also illegal
+		if Variant == VARIANT_Racing_Kings {
+			checkedThem:=pos.IsChecked(them)
+			checked=checked||checkedThem
+		}
+		pos.UndoMove()
+
+		if !checked {
+			if getfirst {	
+				return []Move{m}
+			} else {
+				legalMoves=append(legalMoves,m)
+			}
+		}
+	}
+
+	return legalMoves
+}
+
+func (pos *Position) PrintLegalMoves() {
+	moves := pos.GetLegalMoves(GET_ALL)
+	for i, move := range moves {
+		fmt.Printf("%2d %6s ",i+1,move.LAN())
+		if ((i%8)==7) && (i!=(len(moves)-1)) {
+			fmt.Printf("\n")
+		}
+	}
+	fmt.Printf("\n")
+}
+///////////////////////////////////////////////////
 
 // InsufficientMaterial returns true if the position is theoretical draw.
 func (pos *Position) InsufficientMaterial() bool {
