@@ -405,6 +405,18 @@ func (eng *Engine) searchQuiescence(α, β int32) int32 {
 			eng.UndoMove()
 			continue
 		}
+
+		///////////////////////////////////////////////////
+		// NEW
+		// In Racing Kings avoid captures that give check.
+		if Variant == VARIANT_Racing_Kings {
+			if eng.Position.IsCheckedLocal(us.Opposite()) {
+				eng.UndoMove()
+				continue
+			}
+		}
+		///////////////////////////////////////////////////
+
 		score := -eng.searchQuiescence(-β, -localα)
 		eng.UndoMove()
 
@@ -634,6 +646,17 @@ func (eng *Engine) searchTree(α, β, depth int32) int32 {
 			eng.UndoMove()
 			continue
 		}
+
+		///////////////////////////////////////////////////
+		// NEW
+		// In Racing Kings skip moves that give check.
+		if Variant == VARIANT_Racing_Kings {
+			if pos.IsCheckedLocal(us.Opposite()) {
+				eng.UndoMove()
+				continue
+			}
+		}
+		///////////////////////////////////////////////////
 
 		// Extend the search when our move gives check.
 		// However do not extend if we can just take the undefended piece.

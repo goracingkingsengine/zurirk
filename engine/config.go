@@ -12,6 +12,15 @@ var START_FENS = [...]string{
 		"8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 0 1",
 	}
 
+var RK_PIECE_VALUES = []int32{
+	0,
+	0,
+	300,
+	325,
+	500,
+	700,
+}
+
 var USE_UNICODE_SYMBOLS      = true
 
 const GET_FIRST              = true

@@ -277,8 +277,34 @@ func EvaluatePosition(pos *Position) Eval {
 	return eval
 }
 
+///////////////////////////////////////////////////
+// NEW
+func EvaluateSideRk(pos *Position, side Color) int32 {
+	var val int32 = 0
+	for piece := Knight ; piece < King ; piece++ {
+		num := pos.ByPiece(side, piece).Count()
+		val += num * RK_PIECE_VALUES[piece]
+	}
+	val += int32(pos.ByPiece(side, King).AsSquare().Rank())*150
+	return val
+}
+///////////////////////////////////////////////////
+
 // Evaluate evaluates position from White's POV.
 func Evaluate(pos *Position) int32 {
+	///////////////////////////////////////////////////
+	// NEW
+	if Variant == VARIANT_Racing_Kings {
+		evalw := EvaluateSideRk(pos, White)
+		evalb := EvaluateSideRk(pos, Black)
+
+		eval := evalw - evalb
+
+		score := eval*128
+
+		return score
+	}
+	///////////////////////////////////////////////////
 	eval := EvaluatePosition(pos)
 	score := eval.Feed(Phase(pos))
 	if KnownLossScore >= score || score >= KnownWinScore {

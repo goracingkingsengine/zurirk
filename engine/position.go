@@ -95,7 +95,9 @@ func (pos *Position) PrintBoard() {
 		}
 		mask=mask >> 1
 	}
-	fmt.Printf("bw %v bb %v\n",pos.IsOnBaseRank(White),pos.IsOnBaseRank(Black))
+	fmt.Printf("evalw %d evalb %d eval %d bw %v bb %v\n",
+		EvaluateSideRk(pos, White),EvaluateSideRk(pos, Black),Evaluate(pos),
+		pos.IsOnBaseRank(White),pos.IsOnBaseRank(Black))
 }
 ///////////////////////////////////////////////////
 
