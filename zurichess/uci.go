@@ -111,10 +111,17 @@ func NewUCI() *UCI {
 
 var reCmd = regexp.MustCompile(`^[[:word:]]+\b`)
 
+var reF = regexp.MustCompile("^f ")
+
 func (uci *UCI) Execute(line string) error {
 	line = strings.TrimSpace(line)
 	if line == "" {
 		return nil
+	}
+
+	if engine.IsTest() {
+		// Convenience command f for set from fen.
+		line=reF.ReplaceAllString(line,"position fen ")
 	}
 
 	cmd := reCmd.FindString(line)

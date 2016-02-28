@@ -56,6 +56,14 @@ type Position struct {
 
 ///////////////////////////////////////////////////
 // NEW
+func (pos *Position) IsOnBaseRank(color Color) bool {
+	kingPos := pos.ByFigure[King] & pos.ByColor[color]
+	if (BbRank8 & kingPos) != 0 {
+		return true
+	}
+	return false
+}
+
 func (pos *Position) PrintBoard() {
 	/*fmt.Printf("  0123456701234567012345670123456701234567012345670123456701234567\n")
 	for j:=0 ; j<FigureArraySize; j++ {
@@ -87,6 +95,7 @@ func (pos *Position) PrintBoard() {
 		}
 		mask=mask >> 1
 	}
+	fmt.Printf("bw %v bb %v\n",pos.IsOnBaseRank(White),pos.IsOnBaseRank(Black))
 }
 ///////////////////////////////////////////////////
 
@@ -490,9 +499,9 @@ func (pos *Position) GetLegalMoves(getfirst bool) []Move {
 	for _, m := range moves {
 		pos.DoMove(m)
 		checked := pos.IsChecked(us)
-		// in Racing Kings any move that gives check is also illegal
+		// In Racing Kings any move that gives local check is also illegal.
 		if Variant == VARIANT_Racing_Kings {
-			checkedThem:=pos.IsChecked(them)
+			checkedThem := pos.IsCheckedLocal(them)
 			checked=checked||checkedThem
 		}
 		pos.UndoMove()
@@ -523,6 +532,18 @@ func (pos *Position) PrintLegalMoves() {
 
 // InsufficientMaterial returns true if the position is theoretical draw.
 func (pos *Position) InsufficientMaterial() bool {
+	///////////////////////////////////////////////////
+	// NEW
+	if Variant == VARIANT_Racing_Kings {
+		if pos.IsOnBaseRank(White) && pos.IsOnBaseRank(Black) {
+			// Both kings on base rank is draw.
+			return true
+		}
+		// No other insufficient material condition for Racking Kings.
+		return false
+	}
+	///////////////////////////////////////////////////
+
 	// K vs K is draw.
 	noKings := (pos.ByColor[White] | pos.ByColor[Black]) &^ pos.ByFigure[King]
 	if noKings == 0 {
@@ -564,10 +585,35 @@ func (pos *Position) FiftyMoveRule() bool {
 	return pos.curr.HalfmoveClock >= 100
 }
 
-// IsChecked returns true if side's king is checked.
-func (pos *Position) IsChecked(side Color) bool {
+// Is the side in local check. Only makes a difference in Racing Kings, where reaching the base rank is global check.
+func (pos *Position) IsCheckedLocal(side Color) bool {
 	kingSq := pos.ByPiece(side, King).AsSquare()
 	return pos.GetAttacker(kingSq, side.Opposite()) != NoFigure
+}
+
+// IsChecked returns true if side's king is checked.
+func (pos *Position) IsChecked(side Color) bool {
+	///////////////////////////////////////////////////
+	// NEW
+	// Check Racing Kings global checks.
+	if Variant == VARIANT_Racing_Kings {
+		onbb := pos.IsOnBaseRank(Black)
+		onbw := pos.IsOnBaseRank(White)
+		if onbb && onbw {
+			// If both kings on base rank, there is no global check.
+		} else if (side==White) && onbb {
+			// If black reached the base rank white is always in check.
+			return true
+		} else if (side==Black) && onbw {
+			// If white reached the base rank and black is not on base rank, black is in check.
+			if !pos.IsOnBaseRank(Black) {
+				return true
+			}
+		}
+		// If no automatic check is true, then return the normal check.
+	}
+	///////////////////////////////////////////////////
+	return pos.IsCheckedLocal(side)
 }
 
 // PrettyPrint pretty prints the current position to log.
