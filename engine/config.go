@@ -22,6 +22,7 @@ var RK_PIECE_VALUES = []int32{
 }
 
 var KING_ADVANCE_VALUE int32 = 250
+var KNIGHT_ADVANCE_VALUE int32 = 5
 
 var USE_UNICODE_SYMBOLS      = true
 

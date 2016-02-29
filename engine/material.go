@@ -281,11 +281,18 @@ func EvaluatePosition(pos *Position) Eval {
 // NEW
 func EvaluateSideRk(pos *Position, side Color) int32 {
 	var val int32 = 0
+	// piece values
 	for piece := Knight ; piece < King ; piece++ {
 		num := pos.ByPiece(side, piece).Count()
 		val += num * RK_PIECE_VALUES[piece]
 	}
+	// king advance value
 	val += int32(pos.ByPiece(side, King).AsSquare().Rank())*KING_ADVANCE_VALUE
+	// knight advance value
+	for bb := pos.ByPiece(side, Knight); bb > 0; {
+		sq := bb.Pop()
+		val += int32(sq.Rank())*KNIGHT_ADVANCE_VALUE
+	}
 	return val
 }
 ///////////////////////////////////////////////////
