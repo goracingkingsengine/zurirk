@@ -178,6 +178,9 @@ func (uci *UCI) Execute(line string) error {
 		case "l":
 			uci.Engine.Position.PrintLegalMoves()
 			return nil
+		case "vs":
+			engine.PrintPieceValues()
+			return nil
 		case "x":
 			return errQuit
 		}
@@ -252,6 +255,13 @@ func (uci *UCI) uci(line string) error {
 	fmt.Printf("option name UCI_AnalyseMode type check default false\n")
 	fmt.Printf("option name Hash type spin default %v min 1 max 65536\n", engine.DefaultHashTableSizeMB)
 	fmt.Printf("option name Ponder type check default true\n")
+	if engine.Variant == engine.VARIANT_Racing_Kings {
+		for piece:=engine.Knight ; piece<engine.King ; piece++ {
+			fmt.Printf("option name %s Value type spin default %d min 0 max 1000\n", 
+					engine.FigureToName[piece],engine.RK_PIECE_VALUES[piece])
+		}
+		fmt.Printf("option name King Advance Value type spin default %d min 0 max 1000\n", engine.KING_ADVANCE_VALUE)
+	}
 	fmt.Println("uciok")
 	return nil
 }
@@ -431,6 +441,7 @@ func (uci *UCI) play() {
 }
 
 var reOption = regexp.MustCompile(`^setoption\s+name\s+(.+?)(\s+value\s+(.*))?$`)
+var reRkSetPieceValue = regexp.MustCompile("^([^\\s]+)\\s+Value$")
 
 func (uci *UCI) setoption(line string) error {
 	option := reOption.FindStringSubmatch(line)
@@ -452,6 +463,31 @@ func (uci *UCI) setoption(line string) error {
 	if len(option) < 3 {
 		return fmt.Errorf("missing setoption value")
 	}
+
+	///////////////////////////////////////////////////
+	// NEW
+	if engine.Variant == engine.VARIANT_Racing_Kings {
+		setPieceValue := reRkSetPieceValue.FindStringSubmatch(option[1])
+		if setPieceValue != nil {
+			pieceValue , err := strconv.ParseInt(option[3], 10, 32)
+			if err != nil {
+				return fmt.Errorf("wrong piece value")
+			}
+			engine.RK_PIECE_VALUES[engine.FigureNameToFigure(setPieceValue[1])]=int32(pieceValue)
+			return nil
+		}
+		switch option[1] {
+		case "King Advance Value" :
+			kingAdvanceValue , err := strconv.ParseInt(option[3], 10, 32)
+			if err != nil {
+				return fmt.Errorf("wrong king advance value")
+			}
+			engine.KING_ADVANCE_VALUE = int32(kingAdvanceValue)
+			return nil
+		}
+	}
+	///////////////////////////////////////////////////
+
 	switch option[1] {
 	case "UCI_AnalyseMode":
 		if mode, err := strconv.ParseBool(option[3]); err != nil {

@@ -52,6 +52,8 @@ const (
 	VARIANT_Racing_Kings
 	)
 
+var FigureToName = [...]string{".","Pawn","Knight","Bishop","Rook","Queen","King"}
+
 const VARIANT_CURRENT        = -1
 ///////////////////////////////////////////////////
 
@@ -209,6 +211,27 @@ func NewEngine(pos *Position, log Logger, options Options) *Engine {
 
 ///////////////////////////////////////////////////
 // NEW
+func FigureNameToFigure(figureString string) Figure {
+	switch figureString {
+		case "Pawn" : return Pawn
+		case "Knight" : return Knight
+		case "Bishop" : return Bishop
+		case "Rook" : return Rook
+		case "Queen" : return Queen
+		case "King" : return King
+	}
+	return NoFigure
+}
+
+func PrintPieceValues() {
+	if Variant == VARIANT_Racing_Kings {
+		for i:=Knight; i<King ; i++ {
+			fmt.Printf("%s %d\n",FigureToName[i],RK_PIECE_VALUES[i])
+		}
+		fmt.Printf("King Advance %d\n",KING_ADVANCE_VALUE)
+	}
+}
+
 func IsTest() bool {
 	return TEST
 }
