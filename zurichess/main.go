@@ -7,10 +7,9 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"runtime"
 	"runtime/pprof"
 
-	"bitbucket.org/zurichess/zurichess/engine"
+	"github.com/goracingkingsengine/zurirk/engine"
 )
 
 var (
@@ -37,9 +36,7 @@ func init() {
 }
 
 func main() {
-	fmt.Printf("zurichess %v https://bitbucket.org/zurichess/zurichess\n", buildVersion)
-	fmt.Printf("build with %v at %v, running on %v\n", runtime.Version(), buildTime, runtime.GOARCH)
-	fmt.Printf("possible basis for zurirk racing kings engine\n")
+	fmt.Printf("zurirk by golang\n\n")
 
 	flag.Parse()
 	if *version {

@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"bitbucket.org/zurichess/zurichess/engine"
+	"github.com/goracingkingsengine/zurirk/engine"
 )
 
 var (
@@ -249,8 +249,8 @@ func (uci *UCI) SetVariant(setVariant int) error {
 ///////////////////////////////////////////////////
 
 func (uci *UCI) uci(line string) error {
-	fmt.Printf("id name zurichess %v\n", buildVersion)
-	fmt.Printf("id author Alexandru Moșoi\n")
+	fmt.Printf("id name zurirk\n")
+	fmt.Printf("id author Alexandru Mosoi\n")
 	fmt.Printf("\n")
 	fmt.Printf("option name UCI_AnalyseMode type check default false\n")
 	fmt.Printf("option name Hash type spin default %v min 1 max 65536\n", engine.DefaultHashTableSizeMB)
