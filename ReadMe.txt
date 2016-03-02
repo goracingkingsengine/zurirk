@@ -17,7 +17,7 @@ To obtain the executable:
 
 5) open a console window and at the command prompt issue the command:
 
-   go get github.com/goracingkingsengine/zurirk/zurichess
+   go get github.com/goracingkingsengine/zurirk/zurirk
    
 6) the executable will be in the 'bin' directory of your workspace
 
